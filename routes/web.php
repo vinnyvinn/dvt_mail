@@ -18,6 +18,11 @@ Route::get('/', function () {
 });
 
 Route::get("send-mail",function (\Illuminate\Http\Request $request){
-    \Mail::to($request->to)->send(new App\Mail\SendMail($request->subject,$request->message));
+    $cc = '';
+    if (isset($request->cc) && $request->cc !==''){
+        $cc = json_decode($request->cc);
+    }
+    info($request->all());
+    \Mail::to($request->to)->cc($cc)->send(new App\Mail\SendMail($request->subject,$request->message));
    return response('Mail sent!');
 });
